@@ -1,0 +1,33 @@
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import { RequireSuperAdmin } from "@/app/guards/RequireSuperAdmin";
+import { LoginPage } from "@/features/login/ui/LoginPage";
+import { NegociosPage } from "@/features/negocios/ui/NegociosPage";
+import { LayoutShell } from "@/widgets/layout/LayoutShell";
+
+/**
+ * Todo lo que no sea /login cuelga del guard. No hay ruta pública dentro del
+ * panel: el valor por defecto es cerrado, así que una pantalla nueva nace
+ * protegida sin que nadie tenga que acordarse.
+ */
+export function Router() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route
+          element={
+            <RequireSuperAdmin>
+              <LayoutShell />
+            </RequireSuperAdmin>
+          }
+        >
+          <Route path="/negocios" element={<NegociosPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/negocios" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
