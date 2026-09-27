@@ -20,8 +20,8 @@ interface Seccion {
  */
 const SECCIONES: Seccion[] = [
   { to: "/negocios", label: "Negocios", icon: Building2 },
-  { to: "/ganancias", label: "Ganancias", icon: LineChart, pendiente: true },
-  { to: "/usuarios", label: "Usuarios", icon: Users, pendiente: true },
+  { to: "/ganancias", label: "Ganancias", icon: LineChart },
+  { to: "/usuarios", label: "Usuarios", icon: Users },
   { to: "/workflow-ia", label: "Workflow IA", icon: GitBranch, pendiente: true },
 ];
 

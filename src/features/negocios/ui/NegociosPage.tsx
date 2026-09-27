@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
 import { Building2, Search, X } from "lucide-react";
+
+import { CrearNegocioDialog } from "./CrearNegocioDialog";
 
 import { useNegocios } from "@/entities/negocio/api";
 import {
@@ -83,6 +86,7 @@ export function NegociosPage() {
               : `${total} ${total === 1 ? "negocio" : "negocios"} en la plataforma`}
           </p>
         </div>
+        <CrearNegocioDialog />
       </header>
 
       {/* --- filtros --- */}
@@ -183,7 +187,15 @@ export function NegociosPage() {
               items.map((n) => (
                 <TableRow key={n.id} data-testid="negocio-fila">
                   <TableCell>
-                    <p className="font-medium">{n.nombre}</p>
+                    {/* El nombre es el enlace y no la fila entera: una fila
+                        clicable se lleva por delante cualquier control que
+                        pongamos adentro después. */}
+                    <Link
+                      to={`/negocios/${n.id}`}
+                      className="font-medium hover:underline"
+                    >
+                      {n.nombre}
+                    </Link>
                     <p className="text-xs text-muted-foreground">
                       /{n.slug}
                       {n.ciudad ? ` · ${n.ciudad}` : ""}

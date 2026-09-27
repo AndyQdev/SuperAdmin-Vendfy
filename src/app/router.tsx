@@ -1,8 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { RequireSuperAdmin } from "@/app/guards/RequireSuperAdmin";
+import { GananciasPage } from "@/features/ganancias/ui/GananciasPage";
 import { LoginPage } from "@/features/login/ui/LoginPage";
+import { NegocioDetallePage } from "@/features/negocios/ui/NegocioDetallePage";
 import { NegociosPage } from "@/features/negocios/ui/NegociosPage";
+import { UsuariosPage } from "@/features/usuarios/ui/UsuariosPage";
 import { LayoutShell } from "@/widgets/layout/LayoutShell";
 
 /**
@@ -24,6 +27,9 @@ export function Router() {
           }
         >
           <Route path="/negocios" element={<NegociosPage />} />
+          <Route path="/negocios/:id" element={<NegocioDetallePage />} />
+          <Route path="/ganancias" element={<GananciasPage />} />
+          <Route path="/usuarios" element={<UsuariosPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/negocios" replace />} />

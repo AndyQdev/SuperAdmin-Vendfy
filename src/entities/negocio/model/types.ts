@@ -77,3 +77,11 @@ export const FILTROS_NEGOCIOS_POR_DEFECTO = {
   pagina: 1,
   tam: 20,
 };
+
+/** Lo que pide `POST /api/admin/stores`. */
+export interface CrearNegocio {
+  nombre: string;
+  slug: string;
+  propietarioEmail: string;
+  descripcion?: string;
+}
