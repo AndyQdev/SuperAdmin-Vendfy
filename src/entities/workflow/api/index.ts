@@ -6,6 +6,7 @@ import type {
   FlowId,
   Grafo,
   ListadoEjecuciones,
+  MetricasAsistente,
 } from "../model/types";
 
 export interface ConsultaEjecuciones {
@@ -50,5 +51,16 @@ export function useEjecucion(id: string | null) {
     queryFn: async () =>
       (await apiFetch<Ejecucion>(`/api/admin/workflow/runs/${id}`)).data,
     enabled: Boolean(id),
+  });
+}
+
+/** Cómo le va al asistente en los últimos días (G8): rutas, tiempos, agente, callejones. */
+export function useMetricas(flow: FlowId, dias: number, habilitado: boolean) {
+  return useQuery({
+    queryKey: ["workflow", "metricas", flow, dias],
+    queryFn: async () =>
+      (await apiFetch<MetricasAsistente>(`/api/admin/workflow/metricas?flow=${flow}&dias=${dias}`)).data,
+    enabled: habilitado,
+    staleTime: 60_000,
   });
 }

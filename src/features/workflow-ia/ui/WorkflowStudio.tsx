@@ -36,6 +36,10 @@ import {
 } from "../model/layout";
 import { NodeInspector } from "./NodeInspector";
 import { NodoCard } from "./NodoCard";
+import { PanelMetricas } from "./PanelMetricas";
+
+/** Los nodos modelo que invocan herramientas: el agente de WhatsApp y el agente del asistente (G7). */
+const MODELOS_CON_HERRAMIENTAS = new Set(["llm_turn", "c4_agente_turno"]);
 
 const tiposDeNodo = { vendfy: NodoCard };
 
@@ -45,6 +49,7 @@ export function WorkflowStudio() {
     ignorar: ["tam"],
   });
   const flow = filtros.flow as FlowId;
+  const enMetricas = filtros.vista === "metricas";
 
   const { data: grafo, isLoading: cargandoGrafo } = useGrafo(flow);
   const { data: listado } = useEjecuciones({
@@ -111,12 +116,13 @@ export function WorkflowStudio() {
       const nodoDestino = grafo.nodos.find((n) => n.id === a.to);
       const nodoOrigen = grafo.nodos.find((n) => n.id === a.from);
       const esToolDelModelo =
-        (a.from === "llm_turn" && nodoDestino?.kind === "tool") ||
-        (a.to === "llm_turn" && nodoOrigen?.kind === "tool");
+        (MODELOS_CON_HERRAMIENTAS.has(a.from) && nodoDestino?.kind === "tool") ||
+        (MODELOS_CON_HERRAMIENTAS.has(a.to) && nodoOrigen?.kind === "tool");
 
       if (esToolDelModelo) {
+        const modelo = MODELOS_CON_HERRAMIENTAS.has(a.from) ? a.from : a.to;
         const grupo = (nodoDestino?.kind === "tool" ? nodoDestino : nodoOrigen)!.group;
-        const clave = `llm_turn::${grupo}`;
+        const clave = `${modelo}::${grupo}`;
         if (vistas.has(clave)) continue;
         vistas.add(clave);
         const representante = grafo.nodos.find(
@@ -124,7 +130,7 @@ export function WorkflowStudio() {
         )!;
         edges.push({
           id: clave,
-          source: "llm_turn",
+          source: modelo,
           target: representante.id,
           label: "invoca ⇄ resultado",
           animated: ejecutados.has(representante.id),
@@ -165,6 +171,26 @@ export function WorkflowStudio() {
           </p>
         </div>
 
+        {/* G8: el proceso (grafo) o cómo le va al asistente (métricas). */}
+        <div className="flex rounded-md border p-0.5" role="tablist" aria-label="Vista">
+          {(["grafo", "metricas"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              role="tab"
+              aria-selected={filtros.vista === v}
+              data-testid={`workflow-vista-${v}`}
+              onClick={() => setFiltro("vista", v)}
+              className={cn(
+                "rounded px-3 py-1.5 text-xs font-medium",
+                filtros.vista === v ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent",
+              )}
+            >
+              {v === "grafo" ? "Grafo" : "Métricas"}
+            </button>
+          ))}
+        </div>
+
         <Select value={filtros.flow} onValueChange={(v) => setFiltro("flow", v)}>
           <SelectTrigger className="w-[210px]" aria-label="Flujo">
             <SelectValue />
@@ -192,6 +218,9 @@ export function WorkflowStudio() {
         </Select>
       </header>
 
+      {enMetricas ? (
+        <PanelMetricas flow={flow} dias={Number(filtros.dias) || 7} onDias={(d) => setFiltro("dias", d)} />
+      ) : (
       <div className="flex min-h-0 flex-1">
         {/* --- ejecuciones --- */}
         <aside className="flex w-72 shrink-0 flex-col border-r bg-background">
@@ -234,6 +263,10 @@ export function WorkflowStudio() {
                     {r.entrada ?? "(sin texto)"}
                   </span>
                 </div>
+                {/* Lo que se le contestó (G7f): sin esto había que abrir cada turno para saberlo. */}
+                {r.salida ? (
+                  <p className="mt-0.5 line-clamp-2 text-[11px] text-foreground/70">{r.salida}</p>
+                ) : null}
                 <p className="mt-1 text-[11px] text-muted-foreground">
                   {NOMBRE_FUENTE[r.source] ?? r.source} · {r.pasos} pasos ·{" "}
                   {(r.totalMs / 1000).toFixed(1)}s
@@ -344,6 +377,7 @@ export function WorkflowStudio() {
           hastaPaso={hastaPaso}
         />
       </div>
+      )}
     </div>
   );
 }

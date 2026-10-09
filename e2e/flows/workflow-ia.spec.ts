@@ -85,4 +85,19 @@ test.describe("workflow ia", () => {
     await page.getByRole("option", { name: "Omnibox del comerciante" }).click();
     await expect(page).toHaveURL(/flow=omnibox_comerciante/);
   });
+
+  /** G8: cómo le va al asistente, desde las trazas (y la vista queda en la dirección). */
+  test("las métricas del asistente: por dónde se resolvió cada frase y los callejones", async ({ page }) => {
+    await page.goto("/workflow-ia?flow=omnibox_comerciante");
+    await page.getByTestId("workflow-vista-metricas").click();
+    await expect(page).toHaveURL(/vista=metricas/);
+    const metricas = page.getByTestId("workflow-metricas");
+    await expect(metricas).toBeVisible();
+    // Con frases en el período, las rutas y los callejones; sin frases, lo dice.
+    await expect(metricas.getByTestId("metricas-rutas").or(metricas.getByText("No hubo frases en este período."))).toBeVisible();
+    await page.getByRole("button", { name: "30 días" }).click();
+    await expect(page).toHaveURL(/dias=30/);
+    await page.getByTestId("workflow-vista-grafo").click();
+    await expect(page.getByTestId("workflow-lienzo")).toBeVisible();
+  });
 });

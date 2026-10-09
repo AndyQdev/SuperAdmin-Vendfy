@@ -98,4 +98,23 @@ export const FILTROS_WORKFLOW_POR_DEFECTO = {
   source: "todos",
   pagina: 1,
   tam: 25,
+  /** "grafo" (el Studio) o "metricas" (G8: cómo le va al asistente). */
+  vista: "grafo",
+  dias: 7,
 };
+
+/** Espejo de `GET /api/admin/workflow/metricas` (G8 · OE-7). */
+export interface MetricasAsistente {
+  periodo: { dias: number; desde: string };
+  frases: number;
+  confirmaciones: number;
+  errores: number;
+  latencia: { p50: number; p90: number; p99: number };
+  porRuta: { ruta: string; n: number; pct: number; p50: number; p90: number }[];
+  agente: { n: number; pct: number; porMotivo: { valor: string; n: number }[]; herramientas: { valor: string; n: number }[] };
+  callejones: { n: number; pct: number; ejemplos: { entrada: string | null; salida: string | null; tienda: string | null; fecha: string }[] };
+  noEncontrados: number;
+  intenciones: { valor: string; n: number }[];
+  porTienda: { valor: string; n: number }[];
+  porDia: { dia: string; n: number; agente: number; callejones: number; errores: number }[];
+}
