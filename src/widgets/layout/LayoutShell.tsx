@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Building2, GitBranch, LineChart, LogOut, Users } from "lucide-react";
+import { Barcode, Building2, GitBranch, LineChart, LogOut, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { useAuth } from "@/app/providers/auth";
@@ -23,6 +23,7 @@ const SECCIONES: Seccion[] = [
   { to: "/ganancias", label: "Ganancias", icon: LineChart },
   { to: "/usuarios", label: "Usuarios", icon: Users },
   { to: "/workflow-ia", label: "Workflow IA", icon: GitBranch },
+  { to: "/catalogo", label: "Catálogo", icon: Barcode },
 ];
 
 export function LayoutShell() {

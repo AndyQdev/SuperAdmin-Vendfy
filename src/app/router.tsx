@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { RequireSuperAdmin } from "@/app/guards/RequireSuperAdmin";
+import { CatalogoPage } from "@/features/catalogo/ui/CatalogoPage";
 import { GananciasPage } from "@/features/ganancias/ui/GananciasPage";
 import { LoginPage } from "@/features/login/ui/LoginPage";
 import { NegocioDetallePage } from "@/features/negocios/ui/NegocioDetallePage";
@@ -32,6 +33,7 @@ export function Router() {
           <Route path="/ganancias" element={<GananciasPage />} />
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/workflow-ia" element={<WorkflowStudio />} />
+          <Route path="/catalogo" element={<CatalogoPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/negocios" replace />} />
