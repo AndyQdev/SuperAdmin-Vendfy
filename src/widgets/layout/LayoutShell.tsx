@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Barcode, Building2, GitBranch, LineChart, LogOut, Users } from "lucide-react";
+import { Barcode, Building2, FlaskConical, GitBranch, LineChart, LogOut, MessageSquareWarning, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { useAuth } from "@/app/providers/auth";
@@ -24,14 +24,16 @@ const SECCIONES: Seccion[] = [
   { to: "/usuarios", label: "Usuarios", icon: Users },
   { to: "/workflow-ia", label: "Workflow IA", icon: GitBranch },
   { to: "/catalogo", label: "Catálogo", icon: Barcode },
+  { to: "/beta", label: "Programa beta", icon: FlaskConical },
+  { to: "/reportes", label: "Reportes", icon: MessageSquareWarning },
 ];
 
 export function LayoutShell() {
   const { usuario, salir } = useAuth();
 
   return (
-    <div className="flex min-h-screen bg-muted/30">
-      <aside className="hidden w-60 shrink-0 flex-col border-r bg-background md:flex">
+    <div className="flex min-h-screen bg-muted/30 print:bg-white">
+      <aside className="hidden w-60 shrink-0 flex-col border-r bg-background md:flex print:!hidden">
         <div className="flex h-16 items-center gap-2 border-b px-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
             V

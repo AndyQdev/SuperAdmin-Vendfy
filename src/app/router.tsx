@@ -1,6 +1,11 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { RequireSuperAdmin } from "@/app/guards/RequireSuperAdmin";
+import { CohortePage } from "@/features/beta/ui/CohortePage";
+import { CohortesPage } from "@/features/beta/ui/CohortesPage";
+import { ComparacionPage } from "@/features/beta/ui/ComparacionPage";
+import { InformePage } from "@/features/beta/ui/InformePage";
+import { ReportesPage } from "@/features/beta/ui/ReportesPage";
 import { CatalogoPage } from "@/features/catalogo/ui/CatalogoPage";
 import { GananciasPage } from "@/features/ganancias/ui/GananciasPage";
 import { LoginPage } from "@/features/login/ui/LoginPage";
@@ -34,6 +39,11 @@ export function Router() {
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/workflow-ia" element={<WorkflowStudio />} />
           <Route path="/catalogo" element={<CatalogoPage />} />
+          <Route path="/beta" element={<CohortesPage />} />
+          <Route path="/beta/comparar" element={<ComparacionPage />} />
+          <Route path="/beta/:id" element={<CohortePage />} />
+          <Route path="/beta/:id/informe" element={<InformePage />} />
+          <Route path="/reportes" element={<ReportesPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/negocios" replace />} />

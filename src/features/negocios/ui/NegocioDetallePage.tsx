@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import { useNegocio } from "@/entities/negocio/api";
+import { BetaDelNegocio } from "@/features/beta/ui/BetaDelNegocio";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -104,6 +105,8 @@ export function NegocioDetallePage() {
           </>
         )}
       </section>
+
+      {id && <BetaDelNegocio storeId={id} />}
     </div>
   );
 }
