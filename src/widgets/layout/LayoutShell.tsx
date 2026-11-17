@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Barcode, Building2, FlaskConical, GitBranch, LineChart, LogOut, MessageSquareWarning, Users } from "lucide-react";
+import { Barcode, Building2, CreditCard, FlaskConical, GitBranch, LineChart, LogOut, MessageSquareWarning, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { useAuth } from "@/app/providers/auth";
@@ -21,6 +21,7 @@ interface Seccion {
 const SECCIONES: Seccion[] = [
   { to: "/negocios", label: "Negocios", icon: Building2 },
   { to: "/ganancias", label: "Ganancias", icon: LineChart },
+  { to: "/planes", label: "Planes", icon: CreditCard },
   { to: "/usuarios", label: "Usuarios", icon: Users },
   { to: "/workflow-ia", label: "Workflow IA", icon: GitBranch },
   { to: "/catalogo", label: "Catálogo", icon: Barcode },

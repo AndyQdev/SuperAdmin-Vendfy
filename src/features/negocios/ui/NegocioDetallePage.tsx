@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 
 import { useNegocio } from "@/entities/negocio/api";
 import { BetaDelNegocio } from "@/features/beta/ui/BetaDelNegocio";
+import { PlanDelNegocio } from "@/features/planes/ui/PlanDelNegocio";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Skeleton } from "@/shared/ui/skeleton";
@@ -105,6 +106,9 @@ export function NegocioDetallePage() {
           </>
         )}
       </section>
+
+      {/* El plan es del dueño: vale para todas sus tiendas y su equipo. */}
+      {id && <PlanDelNegocio storeId={id} />}
 
       {id && <BetaDelNegocio storeId={id} />}
     </div>

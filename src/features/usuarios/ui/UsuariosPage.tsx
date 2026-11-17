@@ -124,6 +124,10 @@ export function UsuariosPage() {
                     ) : (
                       <span className="text-muted-foreground">—</span>
                     )}
+                    {u.negocioDe ? (
+                      <p className="mt-1 text-xs text-muted-foreground">Equipo de {u.negocioDe.nombre}</p>
+                    ) : null}
+                    {!u.activo ? <p className="mt-1 text-xs text-destructive">Desactivado</p> : null}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {u.telefono ?? "—"}

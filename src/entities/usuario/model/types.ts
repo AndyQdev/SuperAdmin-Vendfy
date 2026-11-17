@@ -7,6 +7,8 @@ export interface UsuarioPlataforma {
   negocios: number;
   creado: string;
   activo: boolean;
+  /** Si es empleado: el dueño del negocio para el que trabaja. */
+  negocioDe?: { id: string; nombre: string } | null;
 }
 
 export interface ListadoUsuarios {
