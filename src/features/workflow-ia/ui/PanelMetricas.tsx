@@ -42,7 +42,7 @@ export function PanelMetricas({ flow, dias, onDias }: { flow: FlowId; dias: numb
     return (
       <p data-testid="workflow-metricas-no-aplica" className="p-8 text-sm text-muted-foreground">
         Las métricas por capa son del asistente del comercio: elige «Omnibox del comerciante».
-        {flow === "piloto_voz" && " Las sesiones del piloto de voz se revisan una por una en la vista Grafo."}
+        {flow === "piloto_voz" && " Las sesiones del asistente de voz se revisan una por una en la vista Grafo."}
       </p>
     );
   }

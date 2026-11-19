@@ -261,7 +261,7 @@ export function WorkflowStudio() {
                 className="p-6 text-center text-sm text-muted-foreground"
               >
                 {flow === "piloto_voz"
-                  ? "Todavía no hay sesiones del piloto de voz registradas."
+                  ? "Todavía no hay sesiones del asistente de voz registradas."
                   : "Todavía no hay turnos registrados para este flujo."}
               </p>
             )}

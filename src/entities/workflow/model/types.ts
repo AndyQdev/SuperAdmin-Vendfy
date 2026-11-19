@@ -11,7 +11,7 @@ export type FlowId = "agente_whatsapp" | "omnibox_comerciante" | "piloto_voz";
 export const NOMBRE_FLUJO: Record<FlowId, string> = {
   agente_whatsapp: "Agente de WhatsApp",
   omnibox_comerciante: "Omnibox del comerciante",
-  piloto_voz: "Piloto de voz («Oye Vendfy»)",
+  piloto_voz: "Asistente de voz («Oye Vendfy»)",
 };
 
 /**
