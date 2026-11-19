@@ -82,7 +82,9 @@ export function WorkflowStudio() {
   });
 
   const [runId, setRunId] = useState<string | null>(null);
-  const { data: ejecucion } = useEjecucion(runId);
+  const { data: cargada } = useEjecucion(runId);
+  // Una ejecución de otro flujo no se muestra sobre este grafo (quedaba elegida al cambiar de flujo).
+  const ejecucion = cargada && cargada.flow === flow ? cargada : undefined;
 
   /** Hasta qué paso se muestra encendido. null = el recorrido completo. */
   const [hastaPaso, setHastaPaso] = useState<number | null>(null);
@@ -325,7 +327,7 @@ export function WorkflowStudio() {
               data-testid="workflow-lienzo"
             >
               <Background gap={18} size={1} />
-              <Controls showInteractive={false} />
+              <Controls showInteractive={false} position="top-left" />
             </ReactFlow>
           )}
 
@@ -388,7 +390,7 @@ export function WorkflowStudio() {
               </Button>
               {/* El piloto no tiene modelo propio: se muestra cómo se abrió y por qué terminó. */}
               {ejecucion.flow === "piloto_voz" ? (
-                <Badge variant="outline" className="ml-1" data-testid="workflow-sesion-piloto">
+                <Badge variant="outline" className="ml-1 whitespace-nowrap" data-testid="workflow-sesion-piloto">
                   {resumenPiloto(ejecucion)}
                 </Badge>
               ) : ejecucion.proveedor || ejecucion.modelo ? (
