@@ -112,3 +112,49 @@ test("la disposición es estable entre llamadas", () => {
     expect(b.get(id)).toEqual(p);
   }
 });
+
+/**
+ * El piloto de voz («Oye Vendfy»): cinco grupos, uno por columna, en el orden
+ * de la sesión. Sin columnas propias caían todos en la de herramientas, uno
+ * debajo del otro, y el ciclo escucha → pregunta → escucha no se leía.
+ */
+const piloto: Grafo = {
+  flow: "piloto_voz",
+  grupos: [
+    { id: "p_entrada", label: "Se abre y escucha", description: "" },
+    { id: "p_servidor", label: "Servidor", description: "" },
+    { id: "p_piloto", label: "El piloto decide", description: "" },
+    { id: "p_pantalla", label: "Pantalla", description: "" },
+    { id: "p_salida", label: "Habla y se cierra", description: "" },
+  ],
+  aristas: [],
+  nodos: [
+    ...["p_apertura", "p_escucha", "p_sin_voz"].map((id) => np(id, "io", "p_entrada")),
+    ...["p_transcripcion", "p_palabra_rescatada", "p_interpretacion"].map((id) => np(id, "llm", "p_servidor")),
+    ...["p_respuesta_corta", "p_repregunta", "p_plan"].map((id) => np(id, "rule", "p_piloto")),
+    ...["p_pantalla", "p_llena", "p_pregunta", "p_guarda"].map((id) => np(id, "tool", "p_pantalla")),
+    ...["p_asistente", "p_habla", "p_error", "p_cierre"].map((id) => np(id, "io", "p_salida")),
+  ],
+};
+
+function np(id: string, kind: any, group: string) {
+  return { ...n(id, kind, group), flow: "piloto_voz" as const };
+}
+
+test("el piloto de voz: un grupo por columna, en el orden de la sesión, sin encimarse", () => {
+  const { posiciones } = calcularDisposicion(piloto);
+  expect(posiciones.size).toBe(piloto.nodos.length);
+  const x = (id: string) => posiciones.get(id)!.x;
+
+  expect(x("p_apertura")).toBeLessThan(x("p_transcripcion"));
+  expect(x("p_transcripcion")).toBeLessThan(x("p_plan"));
+  expect(x("p_plan")).toBeLessThan(x("p_pantalla"));
+  expect(x("p_pantalla")).toBeLessThan(x("p_cierre"));
+
+  const lista = [...posiciones.values()];
+  for (let i = 0; i < lista.length; i++) {
+    for (let j = i + 1; j < lista.length; j++) {
+      expect(haySolapamiento(lista[i], lista[j]), `${lista[i].id} ↔ ${lista[j].id}`).toBe(false);
+    }
+  }
+});

@@ -5,7 +5,46 @@
  * Si cambian allá, cambian acá: no hay generación automática que los mantenga
  * sincronizados, y ese es el primer lugar donde mirar si el grafo se ve raro.
  */
-export type FlowId = "agente_whatsapp" | "omnibox_comerciante";
+export type FlowId = "agente_whatsapp" | "omnibox_comerciante" | "piloto_voz";
+
+/** Cómo se llama cada flujo en el selector del Studio. */
+export const NOMBRE_FLUJO: Record<FlowId, string> = {
+  agente_whatsapp: "Agente de WhatsApp",
+  omnibox_comerciante: "Omnibox del comerciante",
+  piloto_voz: "Piloto de voz («Oye Vendfy»)",
+};
+
+/**
+ * Lo que el panel guarda de cada sesión del piloto de voz en el
+ * `configSnapshot` (POST /api/omnibox/piloto/sesion). El piloto no tiene
+ * proveedor ni modelo propios: eso va en la traza del omnibox.
+ */
+export interface SnapshotPiloto {
+  sesion: string | null;
+  origen: "palabra" | "atajo" | "boton" | "teclado" | null;
+  plataforma: "windows" | "android" | "web" | null;
+  version: string | null;
+  motivoCierre: string;
+  eventos: number;
+}
+
+export const NOMBRE_ORIGEN_PILOTO: Record<string, string> = {
+  palabra: "«Oye Vendfy»",
+  atajo: "F9",
+  boton: "Botón",
+  teclado: "Teclado",
+};
+
+export const NOMBRE_CIERRE_PILOTO: Record<string, string> = {
+  terminado: "Terminó lo pedido",
+  sin_respuesta: "No contestó a tiempo",
+  cerrado: "La cerró la persona",
+  error: "Error",
+  al_asistente: "Pasó al Asistente",
+  falsa_alarma: "Falsa alarma",
+  otro: "Se cerró",
+};
+
 export type NodeKind = "io" | "llm" | "tool" | "rule";
 
 export interface WorkflowNode {

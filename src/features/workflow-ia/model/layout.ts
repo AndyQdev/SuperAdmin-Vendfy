@@ -29,6 +29,12 @@ const COLUMNAS: Record<string, number> = {
   mensajeria: 2,
   validacion: 3,
   salida: 4,
+  // El piloto de voz: un grupo por columna, en el orden de la sesión.
+  p_entrada: 0,
+  p_servidor: 1,
+  p_piloto: 2,
+  p_pantalla: 3,
+  p_salida: 4,
 };
 
 export interface Posicion {

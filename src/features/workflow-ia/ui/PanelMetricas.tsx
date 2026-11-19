@@ -34,10 +34,17 @@ const segundos = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
  * cuánto tardan. Los callejones se listan para leerlos, no solo contarlos.
  */
 export function PanelMetricas({ flow, dias, onDias }: { flow: FlowId; dias: number; onDias: (d: number) => void }) {
-  const { data: m, isLoading } = useMetricas(flow, dias, true);
+  // Las métricas por capa (rutas, agente, callejones) salen de los pasos del
+  // omnibox: para los otros flujos no se piden, darían todo en cero.
+  const { data: m, isLoading } = useMetricas(flow, dias, flow === "omnibox_comerciante");
 
   if (flow !== "omnibox_comerciante") {
-    return <p className="p-8 text-sm text-muted-foreground">Las métricas por capa son del asistente del comercio: elegí «Omnibox del comerciante».</p>;
+    return (
+      <p data-testid="workflow-metricas-no-aplica" className="p-8 text-sm text-muted-foreground">
+        Las métricas por capa son del asistente del comercio: elige «Omnibox del comerciante».
+        {flow === "piloto_voz" && " Las sesiones del piloto de voz se revisan una por una en la vista Grafo."}
+      </p>
+    );
   }
 
   return (

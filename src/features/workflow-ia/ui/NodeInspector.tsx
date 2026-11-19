@@ -35,7 +35,7 @@ export function NodeInspector({
       <aside className="hidden w-80 shrink-0 border-l bg-background xl:block">
         <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-sm text-muted-foreground">
           <MousePointerClick className="h-8 w-8 opacity-40" />
-          <p>Elegí un nodo del lienzo para ver qué hace y qué pasó en él.</p>
+          <p>Elige un nodo del lienzo para ver qué hace y qué pasó en él.</p>
         </div>
       </aside>
     );
@@ -69,7 +69,7 @@ export function NodeInspector({
         <div className="rounded-md border bg-muted/30 p-3 text-xs">
           {!ejecucion ? (
             <span className="text-muted-foreground">
-              Abrí una ejecución para ver qué pasó acá.
+              Abre una ejecución para ver qué pasó aquí.
             </span>
           ) : pasos.length === 0 ? (
             <span className="text-muted-foreground">

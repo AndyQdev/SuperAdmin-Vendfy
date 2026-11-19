@@ -11,8 +11,13 @@ import "@xyflow/react/dist/style.css";
 import { useEjecucion, useEjecuciones, useGrafo } from "@/entities/workflow/api";
 import {
   FILTROS_WORKFLOW_POR_DEFECTO,
+  NOMBRE_CIERRE_PILOTO,
+  NOMBRE_FLUJO,
   NOMBRE_FUENTE,
+  NOMBRE_ORIGEN_PILOTO,
+  type Ejecucion,
   type FlowId,
+  type SnapshotPiloto,
 } from "@/entities/workflow/model/types";
 import { useFiltrosUrl } from "@/shared/hooks/use-filtros-url";
 import { Badge } from "@/shared/ui/badge";
@@ -37,6 +42,22 @@ import {
 import { NodeInspector } from "./NodeInspector";
 import { NodoCard } from "./NodoCard";
 import { PanelMetricas } from "./PanelMetricas";
+
+/**
+ * Una sesión del piloto de voz en una línea: cómo se abrió, en qué, y por qué
+ * terminó (sale del `configSnapshot` que guarda el endpoint del panel).
+ */
+function resumenPiloto(ejecucion: Ejecucion): string {
+  const s = (ejecucion.configSnapshot ?? {}) as Partial<SnapshotPiloto>;
+  return [
+    s.origen ? (NOMBRE_ORIGEN_PILOTO[s.origen] ?? s.origen) : null,
+    s.plataforma ?? null,
+    s.version ? `v${s.version}` : null,
+    s.motivoCierre ? (NOMBRE_CIERRE_PILOTO[s.motivoCierre] ?? s.motivoCierre) : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
 
 /** Los nodos modelo que invocan herramientas: el agente de WhatsApp y el agente del asistente (G7). */
 const MODELOS_CON_HERRAMIENTAS = new Set(["llm_turn", "c4_agente_turno"]);
@@ -192,14 +213,15 @@ export function WorkflowStudio() {
         </div>
 
         <Select value={filtros.flow} onValueChange={(v) => setFiltro("flow", v)}>
-          <SelectTrigger className="w-[210px]" aria-label="Flujo">
+          <SelectTrigger className="w-[240px]" aria-label="Flujo">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="agente_whatsapp">Agente de WhatsApp</SelectItem>
-            <SelectItem value="omnibox_comerciante">
-              Omnibox del comerciante
-            </SelectItem>
+            {(Object.keys(NOMBRE_FLUJO) as FlowId[]).map((f) => (
+              <SelectItem key={f} value={f}>
+                {NOMBRE_FLUJO[f]}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -238,7 +260,9 @@ export function WorkflowStudio() {
                 data-testid="workflow-sin-ejecuciones"
                 className="p-6 text-center text-sm text-muted-foreground"
               >
-                Todavía no hay turnos registrados para este flujo.
+                {flow === "piloto_voz"
+                  ? "Todavía no hay sesiones del piloto de voz registradas."
+                  : "Todavía no hay turnos registrados para este flujo."}
               </p>
             )}
 
@@ -362,9 +386,16 @@ export function WorkflowStudio() {
               >
                 {hastaPaso === null ? "Paso a paso" : "Ver todo"}
               </Button>
-              <Badge variant="outline" className="ml-1">
-                {ejecucion.proveedor}/{ejecucion.modelo}
-              </Badge>
+              {/* El piloto no tiene modelo propio: se muestra cómo se abrió y por qué terminó. */}
+              {ejecucion.flow === "piloto_voz" ? (
+                <Badge variant="outline" className="ml-1" data-testid="workflow-sesion-piloto">
+                  {resumenPiloto(ejecucion)}
+                </Badge>
+              ) : ejecucion.proveedor || ejecucion.modelo ? (
+                <Badge variant="outline" className="ml-1">
+                  {ejecucion.proveedor}/{ejecucion.modelo}
+                </Badge>
+              ) : null}
             </div>
           )}
         </main>
